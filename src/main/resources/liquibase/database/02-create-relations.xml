@@ -1,0 +1,36 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd"
+>
+    <changeSet author="sarpio" id="create-relations">
+
+        <addForeignKeyConstraint baseTableName="orders"
+                                 baseColumnNames="customer_id"
+                                 constraintName="fk_customer_to_orders"
+                                 referencedTableName="customers"
+                                 referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint baseTableName="order_detail"
+                                 baseColumnNames="order_id"
+                                 constraintName="fk_orders_with_orders_detail"
+                                 referencedTableName="orders"
+                                 referencedColumnNames="id"
+        />
+        <addForeignKeyConstraint baseTableName="products"
+                                 baseColumnNames="category_id"
+                                 constraintName="fk_product_category"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_detail"
+                                 baseColumnNames="product_id"
+                                 constraintName="fk_order_detail_product"
+                                 referencedTableName="products"
+                                 referencedColumnNames="id"
+        />
+    </changeSet>
+</databaseChangeLog>
