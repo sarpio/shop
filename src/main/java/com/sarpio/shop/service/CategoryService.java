@@ -40,9 +40,6 @@ public class CategoryService {
     }
 
     public CategoryDto editCategory(Long id, CategoryDto categoryDto) throws ResourceNotFoundException {
-        if(!categoryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("There is no category with given id: " + id);
-        }
         CategoryDto dto = CategoryDto.builder().build();
         dto.setId(id);
         dto.setName(categoryDto.getName());

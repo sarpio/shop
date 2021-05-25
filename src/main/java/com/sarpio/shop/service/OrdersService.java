@@ -30,9 +30,6 @@ public class OrdersService {
     }
 
     public OrdersDto findOrdersById(Long id) throws ResourceNotFoundException {
-        if (!ordersRepository.existsById(id)) {
-            throw new ResourceNotFoundException("There is no order with given id: " + id);
-        }
         OrdersEntity ordersEntityById = ordersRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("No order with id: " + id));
         return EntityDtoMapper.map(ordersEntityById);
     }
@@ -59,6 +56,7 @@ public class OrdersService {
         editedEntity.setNumber(dto.getNumber());
         editedEntity.setDate(date);
         editedEntity.setTotal(getOrderTotal(orderId));
+//        OrdersEntity ordersEntity = EntityDtoMapper.map(dto);
         ordersRepository.save(editedEntity);
         return dto;
     }

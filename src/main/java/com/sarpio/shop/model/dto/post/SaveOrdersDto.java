@@ -21,18 +21,8 @@ public class SaveOrdersDto {
     @Schema(description = "Order number number")
     private Long number;
 
-//    @JsonFormat(pattern="yyyy-MM-dd")
-//    @Schema(description = "Acceptable date format: yyyy-MM-dd")
-//    private LocalDate date;
-
     @NotNull(message = "Must be valid Enum value")
     @Enumerated(EnumType.STRING)
     @Schema(description = "Only Enum")
     private OrdersStatus status;
-
-//    @NotNull(message = "Value calculated as sum of all order details belong to specific order")
-//    @NotBlank(message = "Value calculated as sum of all order details belong to specific order")
-//    @Min(0)
-//    @Schema(description = "Total value of the order")
-//    private Double total;
 }

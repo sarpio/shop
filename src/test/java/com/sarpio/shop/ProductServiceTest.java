@@ -2,12 +2,14 @@ package com.sarpio.shop;
 
 import com.sarpio.shop.model.CategoryEntity;
 import com.sarpio.shop.model.ProductsEntity;
+import com.sarpio.shop.model.dto.CategoryDto;
 import com.sarpio.shop.model.dto.ProductsDto;
 import com.sarpio.shop.model.dto.post.SaveProductDto;
 import com.sarpio.shop.repository.CategoryRepository;
 import com.sarpio.shop.repository.ProductsRepository;
 import com.sarpio.shop.repository.cache.ProductCache;
 import com.sarpio.shop.service.ProductsService;
+import com.sarpio.shop.utils.EntityDtoMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -16,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +28,9 @@ public class ProductServiceTest {
 
     @Mock
     private ProductsRepository productsRepository;
+
     @Mock
     private ProductCache productCache;
-    @Mock
-    private CategoryRepository categoryRepository;
 
     @InjectMocks
     private ProductsService productsService;
@@ -85,10 +87,38 @@ public class ProductServiceTest {
                 .price(220.01)
                 .categoryId(1L)
                 .build();
-       SaveProductDto saveProductDto1 = productsService.addProduct(saveProductDto);
-       Assertions.assertNotNull(saveProductDto1);
-       Assertions.assertEquals("Product 1a", saveProductDto1.getName());
-       Assertions.assertEquals(1L, saveProductDto1.getId());
+        SaveProductDto saveProductDto1 = productsService.addProduct(saveProductDto);
+        Assertions.assertNotNull(saveProductDto1);
+        Assertions.assertEquals("Product 1a", saveProductDto1.getName());
+        Assertions.assertEquals(1L, saveProductDto1.getId());
+    }
+
+    @Test
+    public void shouldProperEditProduct() {
+        ProductsEntity productsEntity = ProductsEntity.builder()
+                .id(1L)
+                .name("waciki")
+                .description("Pozłacane")
+                .price(200.22)
+                .categoryEntity(CategoryEntity.builder()
+                        .id(1L)
+                        .name("Category 1")
+                        .build())
+                .build();
+
+        Mockito.when(productsRepository.save(Mockito.any())).thenReturn(productsEntity);
+        SaveProductDto saveProductDto = SaveProductDto.builder()
+                .id(1L)
+                .name("nowa nazwa")
+                .description("Pozłacane")
+                .price(200.22)
+                .categoryId(1L)
+                .build();
+
+        ProductsEntity productsEntity1 = EntityDtoMapper.map(productsService.editOrAddProduct(1L, saveProductDto));
+        Assertions.assertNotNull(productsEntity1);
+        Assertions.assertEquals("nowa nazwa", productsEntity1.getName());
+        Assertions.assertEquals(1L, productsEntity1.getId());
     }
 
     private List<ProductsEntity> prepareProductEntities() {

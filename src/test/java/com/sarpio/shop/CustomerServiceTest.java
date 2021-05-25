@@ -5,8 +5,6 @@ import com.sarpio.shop.model.dto.CustomerDto;
 import com.sarpio.shop.repository.CustomerRepository;
 import com.sarpio.shop.repository.cache.CustomerCache;
 import com.sarpio.shop.service.CustomerService;
-import com.sarpio.shop.utils.EntityDtoMapper;
-import lombok.RequiredArgsConstructor;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -15,8 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +101,7 @@ public class CustomerServiceTest {
                 .email("jk@email.com")
                 .phone("400-500-600")
                 .build();
-        CustomerDto customerDto1 = customerService.addCustomer(customerDto);
+        CustomerDto customerDto1 = customerService.editCustomerById(1L, customerDto);
         Assertions.assertNotNull(customerDto1);
         Assertions.assertEquals("Kowalski", customerDto1.getLast_name());
         Assertions.assertEquals(1L, customerDto1.getId());

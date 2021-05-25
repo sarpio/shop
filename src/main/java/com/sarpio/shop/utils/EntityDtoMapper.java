@@ -3,6 +3,7 @@ package com.sarpio.shop.utils;
 import com.sarpio.shop.model.*;
 import com.sarpio.shop.model.dto.*;
 import com.sarpio.shop.model.dto.post.SaveOrderDetailDto;
+import com.sarpio.shop.model.dto.post.SaveOrdersDto;
 import com.sarpio.shop.model.dto.post.SaveProductDto;
 import org.springframework.beans.BeanUtils;
 import java.util.stream.Collectors;
@@ -68,6 +69,14 @@ public class EntityDtoMapper {
         return entity;
     }
 
+    public static OrdersEntity map(SaveOrdersDto dto) {
+        OrdersEntity entity = OrdersEntity.builder().build();
+        BeanUtils.copyProperties(dto, entity);
+        return entity;
+    }
+
+
+
     public static OrderDetailDto map(OrderDetailEntity entity) {
         OrderDetailDto dto = OrderDetailDto.builder().build();
         if (entity.getProductsEntity() != null) {
@@ -94,4 +103,5 @@ public class EntityDtoMapper {
         detailEntity.setQuantity(saveDto.getQuantity());
         return detailEntity;
     }
+
 }

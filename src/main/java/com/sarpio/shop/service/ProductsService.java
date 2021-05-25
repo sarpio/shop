@@ -52,31 +52,23 @@ public class ProductsService {
         CategoryEntity category = CategoryEntity.builder().build();
         category.setId(dto.getCategoryId());
 
-        entity.setName(dto.getName());
-        if (dto.getName() == null || dto.getName().equals(""))
-            throw new ResourceNotFoundException(" Name cannot be null");
-
-        entity.setDescription(dto.getDescription());
-        if (dto.getDescription() == null || dto.getDescription().equals(""))
-            throw new ResourceNotFoundException("Description cannot be null");
-
-        entity.setPrice(dto.getPrice());
-        if (dto.getPrice() == null || dto.getPrice() <= 0)
-            throw new ResourceNotFoundException("Price cannot be <=0 or null");
-
+//        entity.setName(dto.getName());
+//        if (dto.getName() == null || dto.getName().equals(""))
+//            throw new ResourceNotFoundException(" Name cannot be null");
+//
+//        entity.setDescription(dto.getDescription());
+//        if (dto.getDescription() == null || dto.getDescription().equals(""))
+//            throw new ResourceNotFoundException("Description cannot be null");
+//
+//        entity.setPrice(dto.getPrice());
+//        if (dto.getPrice() == null || dto.getPrice() <= 0)
+//            throw new ResourceNotFoundException("Price cannot be <=0 or null");
         entity.setCategoryEntity(category);
-//        if (dto.getCategoryId() == null || !existsId(dto.getCategoryId()))
-//            throw new ResourceNotFoundException("Category Id cannot be null");
-//        if (!categoryRepository.existsById(dto.getCategoryId()))
-//            throw new ResourceNotFoundException("No valid category id provided");
         productsRepository.save(entity);
         return dto;
     }
 
     public SaveProductDto editOrAddProduct(Long id, SaveProductDto dto) throws ResourceNotFoundException {
-        if (!productsRepository.existsById(id)) {
-            throw new ResourceNotFoundException("There is no category with given id: " + id);
-        }
         CategoryEntity category = CategoryEntity.builder().build();
         category.setId(dto.getCategoryId());
         ProductsEntity entity = EntityDtoMapper.map(dto);

@@ -60,11 +60,30 @@ public class CategoryServiceTest {
                 .id(1L)
                 .name("Category 1")
                 .build();
-        Mockito.when(categoryRepository.save(category)).thenReturn(category);
+//        Mockito.when(categoryRepository.save(category)).thenReturn(category);
         CategoryDto categoryDto = categoryService.addCategory(EntityDtoMapper.map(category));
         Assertions.assertNotNull(categoryDto);
         Assertions.assertEquals(1L, categoryDto.getId());
         Assertions.assertEquals("Category 1", categoryDto.getName());
+    }
+
+    @Test
+    public void shouldProperEditCategory() {
+        CategoryEntity categoryEntity = CategoryEntity.builder()
+                .id(1L)
+                .name("Category 1")
+                .build();
+        Mockito.when(categoryRepository.save(Mockito.any())).thenReturn(categoryEntity);
+        CategoryDto categoryDto = CategoryDto.builder()
+                .id(1L)
+                .name("new Category")
+                .build();
+        CategoryDto categoryDto1 = categoryService.editCategory(1L, categoryDto);
+        Assertions.assertNotNull(categoryDto1);
+        Assertions.assertEquals("new Category", categoryDto1.getName());
+        Assertions.assertEquals(1L, categoryDto1.getId());
+
+
     }
 
     public List<CategoryEntity> prepareCategoryEntities() {

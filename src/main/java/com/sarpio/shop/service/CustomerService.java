@@ -54,9 +54,6 @@ public class CustomerService {
     }
 
     public CustomerDto editCustomerById(Long id, CustomerDto dto) throws ResourceNotFoundException {
-        if (!customerRepository.existsById(id)) {
-            throw new ResourceNotFoundException("There is no customer with given id: " + id);
-        }
         CustomersEntity entity = EntityDtoMapper.map(dto);
         entity.setId(id);
         CustomersEntity save = customerRepository.save(entity);
