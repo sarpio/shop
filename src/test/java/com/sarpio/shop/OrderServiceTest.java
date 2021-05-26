@@ -1,10 +1,9 @@
 package com.sarpio.shop;
 
 import com.sarpio.shop.model.*;
-import com.sarpio.shop.model.dto.CustomerDto;
 import com.sarpio.shop.model.dto.OrdersDto;
-import com.sarpio.shop.model.dto.ProductsDto;
 import com.sarpio.shop.model.dto.post.SaveOrdersDto;
+import com.sarpio.shop.repository.OrderDetailRepository;
 import com.sarpio.shop.repository.OrdersRepository;
 import com.sarpio.shop.service.OrdersService;
 import com.sarpio.shop.utils.EntityDtoMapper;
@@ -18,9 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OrderServiceTest {
@@ -28,13 +25,21 @@ public class OrderServiceTest {
     @Mock
     private OrdersRepository ordersRepository;
 
+    @Mock
+    private OrderDetailRepository orderDetailRepository;
+
+    @Mock
+    private OrderDetailEntity orderDetailEntity;
+
     @InjectMocks
     private OrdersService ordersService;
 
     @Before
     public void init() {
         Mockito.when(ordersRepository.findAll()).thenReturn(prepareOrdersEntities());
+        Mockito.when(orderDetailRepository.findAllByOrdersEntityId(1L)).thenReturn(prepareOrderDetailEntities());
     }
+
 
     @Test
     public void shouldReturnProperAllOrders() {
@@ -101,6 +106,8 @@ public class OrderServiceTest {
                 .number(1234L)
                 .status(OrdersStatus.OPEN)
                 .date(LocalDate.now())
+                .total(100.0)
+                .orderDetailEntities(prepareOrderDetailsSet())
                 .customersEntity(CustomersEntity.builder()
                         .id(1L)
                         .first_name("Jan")
@@ -108,22 +115,22 @@ public class OrderServiceTest {
                         .email("email@dot.com")
                         .phone("505-606-707")
                         .address("Address of persone who is int his record 1")
-                        .build())
+                        .build()
+                )
                 .build();
         Mockito.when(ordersRepository.save(Mockito.any())).thenReturn(ordersEntity);
+        Mockito.when(orderDetailRepository.save(Mockito.any())).thenReturn(orderDetailEntity);
         SaveOrdersDto saveOrdersDto = SaveOrdersDto.builder()
                 .id(1L)
                 .number(1234L)
                 .status(OrdersStatus.PAYD)
                 .build();
-        SaveOrdersDto saveOrdersDto1 = ordersService.updateOrder(saveOrdersDto, 1L);
-        System.out.println("test");
+        OrdersEntity entity = EntityDtoMapper.map(ordersService.updateOrder(saveOrdersDto, 1L));
         Assertions.assertNotNull(saveOrdersDto);
-        Assertions.assertEquals(1234L, saveOrdersDto1.getNumber());
-        Assertions.assertEquals(OrdersStatus.PAYD, saveOrdersDto1.getStatus());
-        Assertions.assertEquals(1L, saveOrdersDto1.getId());
+        Assertions.assertEquals(1234L, entity.getNumber());
+        Assertions.assertEquals(OrdersStatus.PAYD, entity.getStatus());
+        Assertions.assertEquals(1L, entity.getId());
     }
-
 
     private List<OrdersEntity> prepareOrdersEntities() {
         List<OrdersEntity> orders = new ArrayList<>();
@@ -139,6 +146,7 @@ public class OrderServiceTest {
                         .phone("555-666-777")
                         .address("Home Addres Street Number 1")
                         .build())
+                .total(101.0)
                 .build());
         orders.add(OrdersEntity.builder()
                 .id(2L)
@@ -152,6 +160,7 @@ public class OrderServiceTest {
                         .phone("534-654-765")
                         .address("Home Addres Street Number 2")
                         .build())
+                .total(102.0)
                 .build());
         orders.add(OrdersEntity.builder()
                 .id(3L)
@@ -165,7 +174,67 @@ public class OrderServiceTest {
                         .phone("606-707-808")
                         .address("Home Addres Street Number 3")
                         .build())
+                .total(103.0)
                 .build());
         return orders;
+    }
+
+    private List<OrderDetailEntity> prepareOrderDetailEntities() {
+        List<OrderDetailEntity> details = new ArrayList<>();
+
+        details.add(OrderDetailEntity.builder()
+                .id(1L)
+                .quantity(1L)
+                .productsEntity(ProductsEntity.builder()
+                        .price(100.0)
+                        .build())
+                .total_price(100.0)
+                .build());
+        details.add(OrderDetailEntity.builder()
+                .id(2L)
+                .quantity(2L)
+                .productsEntity(ProductsEntity.builder()
+                        .price(100.0)
+                        .build())
+                .total_price(200.0)
+                .build());
+        details.add(OrderDetailEntity.builder()
+                .id(3L)
+                .quantity(3L)
+                .productsEntity(ProductsEntity.builder()
+                        .price(100.0)
+                        .build())
+                .total_price(300.0)
+                .build());
+        return details;
+    }
+
+    private Set<OrderDetailEntity> prepareOrderDetailsSet() {
+        Set<OrderDetailEntity> details = new HashSet<>();
+        details.add(OrderDetailEntity.builder()
+                .id(1L)
+                .quantity(1L)
+                .productsEntity(ProductsEntity.builder()
+                        .price(100.0)
+                        .build())
+                .total_price(100.0)
+                .build());
+        details.add(OrderDetailEntity.builder()
+                .id(2L)
+                .quantity(2L)
+                .productsEntity(ProductsEntity.builder()
+                        .price(100.0)
+                        .build())
+                .total_price(200.0)
+                .build());
+        details.add(OrderDetailEntity.builder()
+                .id(3L)
+                .quantity(3L)
+                .productsEntity(ProductsEntity.builder()
+                        .price(100.0)
+                        .build())
+                .total_price(300.0)
+                .build());
+        return details;
     }
 }

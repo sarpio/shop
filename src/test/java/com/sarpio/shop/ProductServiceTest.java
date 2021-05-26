@@ -2,10 +2,8 @@ package com.sarpio.shop;
 
 import com.sarpio.shop.model.CategoryEntity;
 import com.sarpio.shop.model.ProductsEntity;
-import com.sarpio.shop.model.dto.CategoryDto;
 import com.sarpio.shop.model.dto.ProductsDto;
 import com.sarpio.shop.model.dto.post.SaveProductDto;
-import com.sarpio.shop.repository.CategoryRepository;
 import com.sarpio.shop.repository.ProductsRepository;
 import com.sarpio.shop.repository.cache.ProductCache;
 import com.sarpio.shop.service.ProductsService;

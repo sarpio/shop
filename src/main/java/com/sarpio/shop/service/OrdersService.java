@@ -50,7 +50,8 @@ public class OrdersService {
 
     public SaveOrdersDto updateOrder(SaveOrdersDto dto, Long orderId) {
         LocalDate date = LocalDate.now();
-        OrdersEntity editedEntity = ordersRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("No order with id: " + orderId));
+//        OrdersEntity editedEntity = ordersRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException("No order with id: " + orderId));
+        OrdersEntity editedEntity = ordersRepository.findById(orderId).get();
         editedEntity.setId(orderId);
         editedEntity.setStatus(dto.getStatus());
         editedEntity.setNumber(dto.getNumber());

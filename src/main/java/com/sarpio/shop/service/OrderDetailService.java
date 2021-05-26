@@ -34,17 +34,17 @@ public class OrderDetailService {
     }
 
     public OrderDetailDto findOrderDetailById(Long id) throws ResourceNotFoundException {
-        if (!detailRepository.existsById(id)) {
-            throw new ResourceNotFoundException("There is no item with given id: " + id);
-        }
+//        if (!detailRepository.existsById(id)) {
+//            throw new ResourceNotFoundException("There is no item with given id: " + id);
+//        }
         OrderDetailEntity orderDetailEntityById = detailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Detail order with id: " + id));
         return EntityDtoMapper.map(orderDetailEntityById);
     }
 
     public OrderDetailDto deleteDetailById(Long id) throws ResourceNotFoundException {
-        if (!detailRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Order detail with given id: " + id + " not exists");
-        }
+//        if (!detailRepository.existsById(id)) {
+//            throw new ResourceNotFoundException("Order detail with given id: " + id + " not exists");
+//        }
         OrderDetailEntity delEntity = detailRepository.findById(id).stream().findFirst().orElseThrow(() -> new ResourceNotFoundException("There is not order detail with id:" + id));
         detailRepository.deleteById(id);
         updateOrderTotalValue(delEntity.getOrdersEntity().getId());
