@@ -1,11 +1,15 @@
 package com.sarpio.shop;
 
+import com.sarpio.shop.model.CategoryEntity;
 import com.sarpio.shop.model.OrderDetailEntity;
 import com.sarpio.shop.model.ProductsEntity;
 import com.sarpio.shop.model.dto.OrderDetailDto;
-import com.sarpio.shop.model.dto.OrdersDto;
+import com.sarpio.shop.model.dto.post.SaveOrderDetailDto;
 import com.sarpio.shop.repository.OrderDetailRepository;
+import com.sarpio.shop.repository.ProductsRepository;
 import com.sarpio.shop.service.OrderDetailService;
+import com.sarpio.shop.service.ProductsService;
+import com.sarpio.shop.utils.EntityDtoMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,16 +29,18 @@ public class OrderDetailsTest {
 
     @Mock
     private OrderDetailRepository orderDetailRepository;
-
+    @Mock
+    private ProductsRepository productsRepository;
     @Mock
     private OrderDetailEntity orderDetailEntity;
-
     @InjectMocks
     private OrderDetailService orderDetailService;
-
+    @InjectMocks
+    private ProductsService productsService;
     @Before
     public void init() {
         Mockito.when(orderDetailRepository.findAll()).thenReturn(prepareOrderDetailEntities());
+        Mockito.when(productsRepository.findAll()).thenReturn(prepareProductEntities());
     }
 
     @Test
@@ -64,9 +71,34 @@ public class OrderDetailsTest {
         Assertions.assertEquals(200, orderDetailDto.getTotal_price());
     }
 
-    public void shouldProperAddDetailorders() {
+    @Test
+    public void shouldProperAddDetailOrders() {
+        ProductsEntity productsEntity = new ProductsEntity();
+        productsEntity.setId(1L);
+        productsEntity.setPrice(100.0);
+        productsEntity.setName("Product name");
+        productsEntity.setDescription("Description of the product");
+        OrderDetailEntity orderDetailEntity = OrderDetailEntity.builder()
+                .id(1L)
+                .total_price(100.0)
+                .productsEntity(productsEntity)
+                .build();
 
+        Mockito.when(orderDetailRepository.save(Mockito.any())).thenReturn(orderDetailEntity);
+        Mockito.when(productsRepository.save(Mockito.any())).thenReturn(productsEntity);
+        Mockito.when(productsRepository.findById(1L)).thenReturn(Optional.of(prepareProductEntities().get(1)));
+        SaveOrderDetailDto orderDetailDto = SaveOrderDetailDto.builder()
+                .id(1L)
+                .productId(1L)
+                .orderId(1L)
+                .quantity(3L)
+                .build();
+        SaveOrderDetailDto orderDetailDto1 = orderDetailService.saveDetail(EntityDtoMapper.mapSave(orderDetailEntity));
+        Assertions.assertNotNull(orderDetailDto1);
+        Assertions.assertEquals(1L, orderDetailDto1.getId());
+        Assertions.assertEquals(3L, orderDetailDto1.getQuantity());
     }
+
 
     private List<OrderDetailEntity> prepareOrderDetailEntities() {
         List<OrderDetailEntity> details = new ArrayList<>();
@@ -96,5 +128,46 @@ public class OrderDetailsTest {
                 .total_price(300.0)
                 .build());
         return details;
+    }
+    private List<ProductsEntity> prepareProductEntities() {
+        List<ProductsEntity> products = new ArrayList<>();
+        products.add(ProductsEntity.builder()
+                .id(1L)
+                .name("Product 1")
+                .description("Description 1")
+                .price(220.01)
+                .categoryEntity(prepareCategoryEntities().get(0))
+                .build());
+        products.add(ProductsEntity.builder()
+                .id(2L)
+                .name("Product 2")
+                .description("Description 2")
+                .price(120.01)
+                .categoryEntity(prepareCategoryEntities().get(1))
+                .build());
+        products.add(ProductsEntity.builder()
+                .id(3L)
+                .name("Product 3")
+                .description("Description 3")
+                .price(88.12)
+                .categoryEntity(prepareCategoryEntities().get(2))
+                .build());
+        return products;
+    }
+    private List<CategoryEntity> prepareCategoryEntities() {
+        List<CategoryEntity> categoryEntities = new ArrayList<>();
+        categoryEntities.add(CategoryEntity.builder()
+                .id(1L)
+                .name("Category 1")
+                .build());
+        categoryEntities.add(CategoryEntity.builder()
+                .id(2L)
+                .name("Category 2")
+                .build());
+        categoryEntities.add(CategoryEntity.builder()
+                .id(3L)
+                .name("Category 3")
+                .build());
+        return categoryEntities;
     }
 }

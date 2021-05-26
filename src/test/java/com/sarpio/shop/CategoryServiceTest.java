@@ -61,7 +61,6 @@ public class CategoryServiceTest {
                 .id(1L)
                 .name("Category 1")
                 .build();
-//        Mockito.when(categoryRepository.save(category)).thenReturn(category);
         CategoryDto categoryDto = categoryService.addCategory(EntityDtoMapper.map(category));
         Assertions.assertNotNull(categoryDto);
         Assertions.assertEquals(1L, categoryDto.getId());

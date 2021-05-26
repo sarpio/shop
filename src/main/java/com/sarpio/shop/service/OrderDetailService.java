@@ -52,10 +52,10 @@ public class OrderDetailService {
     }
 
     public SaveOrderDetailDto saveDetail(SaveOrderDetailDto dto) throws ResourceNotFoundException {
-        boolean isOrderPresent = ordersRepository.findById(dto.getOrderId()).isPresent();
-        if (!isOrderPresent) throw new ResourceNotFoundException("No valid order present with id: " + dto.getOrderId());
-        boolean isProductPresent = productsRepository.findById(dto.getProductId()).isPresent();
-        if (!isProductPresent) throw new ResourceNotFoundException("No valid Product present with id: " + dto.getProductId());
+//        boolean isOrderPresent = ordersRepository.findById(dto.getOrderId()).isPresent();
+//        if (!isOrderPresent) throw new ResourceNotFoundException("No valid order present with id: " + dto.getOrderId());
+//        boolean isProductPresent = productsRepository.findById(dto.getProductId()).isPresent();
+//        if (!isProductPresent) throw new ResourceNotFoundException("No valid Product present with id: " + dto.getProductId());
 
         OrderDetailEntity entity = EntityDtoMapper.map(dto);
         ProductsEntity prodEntity = productsRepository.findById(dto.getProductId()).get();
@@ -67,9 +67,9 @@ public class OrderDetailService {
     }
 
     public SaveOrderDetailDto updateOrdersDetail(Long id, SaveOrderDetailDto dto) {
-        if (id == null) {
-            throw new ResourceNotFoundException("No id provided for edited Order detail");
-        }
+//        if (id == null) {
+//            throw new ResourceNotFoundException("No id provided for edited Order detail");
+//        }
         if (!detailRepository.existsById(id)) throw new ResourceNotFoundException("Invalid ID: " + id + " provided");
         OrderDetailEntity entity = OrderDetailEntity.builder().build();
         OrdersEntity order = OrdersEntity.builder().build();

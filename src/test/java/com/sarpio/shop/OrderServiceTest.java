@@ -119,7 +119,8 @@ public class OrderServiceTest {
                 )
                 .build();
         Mockito.when(ordersRepository.save(Mockito.any())).thenReturn(ordersEntity);
-        Mockito.when(orderDetailRepository.save(Mockito.any())).thenReturn(orderDetailEntity);
+//        Mockito.when(orderDetailRepository.save(Mockito.any())).thenReturn(orderDetailEntity);
+        Mockito.when(ordersRepository.findById(1l)).thenReturn(Optional.ofNullable(ordersEntity));
         SaveOrdersDto saveOrdersDto = SaveOrdersDto.builder()
                 .id(1L)
                 .number(1234L)

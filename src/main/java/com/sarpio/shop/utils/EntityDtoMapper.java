@@ -75,13 +75,17 @@ public class EntityDtoMapper {
         return entity;
     }
 
-
-
     public static OrderDetailDto map(OrderDetailEntity entity) {
         OrderDetailDto dto = OrderDetailDto.builder().build();
         if (entity.getProductsEntity() != null) {
             dto.setProductsDto(EntityDtoMapper.map(entity.getProductsEntity()));
         }
+        BeanUtils.copyProperties(entity, dto);
+        return dto;
+    }
+
+    public static SaveOrderDetailDto mapSave(OrderDetailEntity entity) {
+        SaveOrderDetailDto dto = SaveOrderDetailDto.builder().build();
         BeanUtils.copyProperties(entity, dto);
         return dto;
     }
