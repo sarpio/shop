@@ -144,7 +144,6 @@ public class ProductServiceTest {
                 .build());
         return products;
     }
-
     private List<CategoryEntity> prepareCategoryEntities() {
         List<CategoryEntity> categoryEntities = new ArrayList<>();
         categoryEntities.add(CategoryEntity.builder()

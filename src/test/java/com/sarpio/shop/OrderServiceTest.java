@@ -28,9 +28,6 @@ public class OrderServiceTest {
     @Mock
     private OrderDetailRepository orderDetailRepository;
 
-    @Mock
-    private OrderDetailEntity orderDetailEntity;
-
     @InjectMocks
     private OrdersService ordersService;
 
@@ -39,7 +36,6 @@ public class OrderServiceTest {
         Mockito.when(ordersRepository.findAll()).thenReturn(prepareOrdersEntities());
         Mockito.when(orderDetailRepository.findAllByOrdersEntityId(1L)).thenReturn(prepareOrderDetailEntities());
     }
-
 
     @Test
     public void shouldReturnProperAllOrders() {
@@ -56,14 +52,7 @@ public class OrderServiceTest {
                 .id(1L)
                 .number(1234L)
                 .date(LocalDate.now())
-                .customersEntity(CustomersEntity.builder()
-                        .id(1L)
-                        .first_name("Jan")
-                        .last_name("Kowalski")
-                        .email("jk@dot.com")
-                        .phone("555-666-777")
-                        .address("Home Addres Street Number 1")
-                        .build())
+                .customersEntity(CustomersEntity.builder().build())
                 .build()));
         //when
         OrdersDto ordersDto = ordersService.findOrdersById(1L);
@@ -79,14 +68,7 @@ public class OrderServiceTest {
                 .id(1L)
                 .number(1234L)
                 .date(LocalDate.now())
-                .customersEntity(CustomersEntity.builder()
-                        .id(1L)
-                        .first_name("Jan")
-                        .last_name("Kowalski")
-                        .email("jk@dot.com")
-                        .phone("555-666-777")
-                        .address("Home Addres Street Number 1")
-                        .build())
+                .customersEntity(CustomersEntity.builder().build())
                 .build();
         Mockito.when(ordersRepository.save(Mockito.any())).thenReturn(ordersEntity);
         SaveOrdersDto saveOrdersDto = SaveOrdersDto.builder()
@@ -108,19 +90,10 @@ public class OrderServiceTest {
                 .date(LocalDate.now())
                 .total(100.0)
                 .orderDetailEntities(prepareOrderDetailsSet())
-                .customersEntity(CustomersEntity.builder()
-                        .id(1L)
-                        .first_name("Jan")
-                        .last_name("Kowalski")
-                        .email("email@dot.com")
-                        .phone("505-606-707")
-                        .address("Address of persone who is int his record 1")
-                        .build()
-                )
+                .customersEntity(CustomersEntity.builder().build())
                 .build();
         Mockito.when(ordersRepository.save(Mockito.any())).thenReturn(ordersEntity);
-//        Mockito.when(orderDetailRepository.save(Mockito.any())).thenReturn(orderDetailEntity);
-        Mockito.when(ordersRepository.findById(1l)).thenReturn(Optional.ofNullable(ordersEntity));
+        Mockito.when(ordersRepository.findById(1L)).thenReturn(Optional.ofNullable(ordersEntity));
         SaveOrdersDto saveOrdersDto = SaveOrdersDto.builder()
                 .id(1L)
                 .number(1234L)
