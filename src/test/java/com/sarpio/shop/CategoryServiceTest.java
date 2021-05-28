@@ -82,8 +82,6 @@ public class CategoryServiceTest {
         Assertions.assertNotNull(categoryDto1);
         Assertions.assertEquals("new Category", categoryDto1.getName());
         Assertions.assertEquals(1L, categoryDto1.getId());
-
-
     }
 
     public List<CategoryEntity> prepareCategoryEntities() {

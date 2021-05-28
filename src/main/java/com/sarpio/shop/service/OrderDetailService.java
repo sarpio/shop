@@ -34,17 +34,11 @@ public class OrderDetailService {
     }
 
     public OrderDetailDto findOrderDetailById(Long id) throws ResourceNotFoundException {
-//        if (!detailRepository.existsById(id)) {
-//            throw new ResourceNotFoundException("There is no item with given id: " + id);
-//        }
         OrderDetailEntity orderDetailEntityById = detailRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found Detail order with id: " + id));
         return EntityDtoMapper.map(orderDetailEntityById);
     }
 
     public OrderDetailDto deleteDetailById(Long id) throws ResourceNotFoundException {
-//        if (!detailRepository.existsById(id)) {
-//            throw new ResourceNotFoundException("Order detail with given id: " + id + " not exists");
-//        }
         OrderDetailEntity delEntity = detailRepository.findById(id).stream().findFirst().orElseThrow(() -> new ResourceNotFoundException("There is not order detail with id:" + id));
         detailRepository.deleteById(id);
         updateOrderTotalValue(delEntity.getOrdersEntity().getId());
@@ -52,13 +46,8 @@ public class OrderDetailService {
     }
 
     public SaveOrderDetailDto saveDetail(SaveOrderDetailDto dto) throws ResourceNotFoundException {
-//        boolean isOrderPresent = ordersRepository.findById(dto.getOrderId()).isPresent();
-//        if (!isOrderPresent) throw new ResourceNotFoundException("No valid order present with id: " + dto.getOrderId());
-//        boolean isProductPresent = productsRepository.findById(dto.getProductId()).isPresent();
-//        if (!isProductPresent) throw new ResourceNotFoundException("No valid Product present with id: " + dto.getProductId());
-
         OrderDetailEntity entity = EntityDtoMapper.map(dto);
-        ProductsEntity prodEntity = productsRepository.findById(dto.getProductId()).get();
+        ProductsEntity prodEntity = productsRepository.findById(dto.getProductId()).orElseThrow(()->new ResourceNotFoundException("Product Id not found"));
         Double price = prodEntity.getPrice();
         entity.setTotal_price(price * entity.getQuantity());
         detailRepository.save(entity);
@@ -67,7 +56,6 @@ public class OrderDetailService {
     }
 
     public SaveOrderDetailDto updateOrdersDetail(Long id, SaveOrderDetailDto dto) {
-//        if (!detailRepository.existsById(id)) throw new ResourceNotFoundException("Invalid ID: " + id + " provided");
         OrderDetailEntity entity = OrderDetailEntity.builder().build();
         OrdersEntity order = OrdersEntity.builder().build();
         order.setId(dto.getOrderId());

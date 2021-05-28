@@ -8,7 +8,6 @@ import com.sarpio.shop.repository.OrdersRepository;
 import com.sarpio.shop.repository.ProductsRepository;
 import com.sarpio.shop.service.OrderDetailService;
 import com.sarpio.shop.service.OrdersService;
-import com.sarpio.shop.utils.EntityDtoMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +40,6 @@ public class OrderDetailServiceTest {
     @Before
     public void init() {
         Mockito.when(orderDetailRepository.findAll()).thenReturn(prepareOrderDetailEntities());
-//        given(orderDetailRepository.findAll()).willReturn(prepareOrderDetailEntities());
     }
 
     @Test
@@ -77,15 +75,14 @@ public class OrderDetailServiceTest {
                 .productId(1L)
                 .orderId(1L)
                 .build();
-        System.out.println();
         OrdersEntity ordersEntity = prepareOrdersEntities().stream().findFirst().get();
         ProductsEntity productsEntity = prepareProductEntities().stream().findFirst().get();
         Mockito.when(productsRepository.findById(detailDto.getProductId())).thenReturn(Optional.of(productsEntity));
         Mockito.when(ordersRepository.findById(detailDto.getOrderId())).thenReturn(Optional.of(ordersEntity));
-        Mockito.when(orderDetailService.saveDetail(detailDto)).thenReturn(detailDto);
-        Assertions.assertNotNull(detailDto);
-        Assertions.assertEquals(1L, detailDto.getId());
-        Assertions.assertEquals(3L, detailDto.getQuantity());
+        SaveOrderDetailDto saveOrderDetailDto = orderDetailService.saveDetail(detailDto);
+        Assertions.assertNotNull(saveOrderDetailDto);
+        Assertions.assertEquals(1L, saveOrderDetailDto.getId());
+        Assertions.assertEquals(3L, saveOrderDetailDto.getQuantity());
     }
 
     @Test
@@ -96,16 +93,16 @@ public class OrderDetailServiceTest {
                 .productId(1L)
                 .orderId(1L)
                 .build();
-        System.out.println();
         OrdersEntity ordersEntity = prepareOrdersEntities().stream().findFirst().get();
         ProductsEntity productsEntity = prepareProductEntities().stream().findFirst().get();
         Mockito.when(productsRepository.findById(detailDto.getProductId())).thenReturn(Optional.of(productsEntity));
         Mockito.when(ordersRepository.findById(detailDto.getOrderId())).thenReturn(Optional.of(ordersEntity));
-        Mockito.when(orderDetailService.updateOrdersDetail(1L, detailDto)).thenReturn(detailDto);
-        Assertions.assertNotNull(detailDto);
-        Assertions.assertEquals(1L, detailDto.getId());
-        Assertions.assertEquals(3L, detailDto.getQuantity());
+        SaveOrderDetailDto saveOrderDetailDto = orderDetailService.updateOrdersDetail(1L, detailDto);
+        Assertions.assertNotNull(saveOrderDetailDto);
+        Assertions.assertEquals(1L, saveOrderDetailDto.getId());
+        Assertions.assertEquals(3L, saveOrderDetailDto.getQuantity());
     }
+
     private List<OrderDetailEntity> prepareOrderDetailEntities() {
         List<OrderDetailEntity> details = new ArrayList<>();
 
@@ -135,6 +132,7 @@ public class OrderDetailServiceTest {
                 .build());
         return details;
     }
+
     private List<ProductsEntity> prepareProductEntities() {
         List<ProductsEntity> products = new ArrayList<>();
         products.add(ProductsEntity.builder()
@@ -160,6 +158,7 @@ public class OrderDetailServiceTest {
                 .build());
         return products;
     }
+
     private List<CategoryEntity> prepareCategoryEntities() {
         List<CategoryEntity> categoryEntities = new ArrayList<>();
         categoryEntities.add(CategoryEntity.builder()
@@ -176,6 +175,7 @@ public class OrderDetailServiceTest {
                 .build());
         return categoryEntities;
     }
+
     private List<OrdersEntity> prepareOrdersEntities() {
         List<OrdersEntity> orders = new ArrayList<>();
         orders.add(OrdersEntity.builder()
